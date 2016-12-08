@@ -6,6 +6,11 @@ float potDC2 = 0;
 float potDC3 = 0;
 float potDC4 = 0;
 
+char byteIn = 'n';
+bool on = false;
+
+int vIndex, dCycles[4];
+
 void setup() {
 
   Serial.begin(9600);
@@ -50,21 +55,42 @@ void pPWM(float pwmfreq, float pwmDC1, float pwmDC2, float pwmDC3, float pwmDC4)
 }
 
 void loop() {
+  
+  while (Serial.available())
+  {
+    byteIn = Serial.read();
+    Serial.println(byteIn);
+    if (byteIn == 'y' || byteIn == 'Y') // y is yes, turn on valves with specified frequency
+      on = true;
+    else if (byteIn == 'v' || byteIn == 'V') // v is for valve - will be followed by index (1-4) and duty cycle percentage (1-100)
+    {
+      vIndex = Serial.parseInt();
+      if (vIndex >= 0 && vIndex < 4)
+      {
+        dCycles[vIndex] = Serial.parseInt();
+      }
+      Serial.println(vIndex);
+      Serial.println(dCycles[vIndex]);
+    }
+    else
+      on = false;
+     Serial.read(); // gobble newline char sent by matlab
+  }
 
   potDC1 = 0; potDC2 = 0; potDC3 = 0; potDC4 = 0;
 
   // if statement for manual switch override
-  if (digitalRead(50) == LOW) {
-  potDC1 = analogRead(A1)*100.0/1024.0; // scale values from pot to 0 to 100, which gets used for duty cycle percentage
+  if (on) {
+    potDC1 = dCycles[0];
+    potDC2 = dCycles[1];
+    potDC3 = dCycles[2];
+    potDC4 = dCycles[3];
   }
- 
-  if (digitalRead(51) == LOW) { potDC2 = analogRead(A2)*100.0/1024.0; }
-  if (digitalRead(52) == LOW) { potDC3 = analogRead(A3)*100.0/1024.0; }
-  if (digitalRead(53) == LOW) { potDC4 = analogRead(A4)*100.0/1024.0; }
 
-  float potPWMfq = analogRead(A7)*100.0/1024.0; // scale values from pot to 0 to 100, which gets used for frequency (Hz)
-  potPWMfq = round(potPWMfq/5)*5+1; //1 to 91 Hz in increments of 5 (rounding helps to deal with noisy pot)
-
+  //float potPWMfq = analogRead(A7)*100.0/1024.0; // scale values from pot to 0 to 100, which gets used for frequency (Hz)
+  //potPWMfq = round(potPWMfq/5)*5+1; //1 to 91 Hz in increments of 5 (rounding helps to deal with noisy pot)
+  float potPWMfq = 30; // manually setting this to reduce jitter
+  //Serial.println(potPWMfq);
   // update PWM output based on the above values from pots
   pPWM(potPWMfq,potDC1,potDC2,potDC3,potDC4);
 
@@ -79,10 +105,10 @@ void loop() {
   float P4 = (analogRead(A11)/1024.0 - 0.1)*100.0/0.8;
 
   // print pressure readings
-  Serial.print(P1); Serial.print("\t");
-  Serial.print(P2); Serial.print("\t");
-  Serial.print(P3); Serial.print("\t");
-  Serial.print(P4); Serial.print("\n");
+  //Serial.print(P1); Serial.print("\t");
+  //Serial.print(P2); Serial.print("\t");
+  //Serial.print(P3); Serial.print("\t");
+  //Serial.print(P4); Serial.print("\n");
 
   delay(200);
 }
