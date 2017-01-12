@@ -28,9 +28,9 @@ def find_circle(p1, p2, p3):
 # use direction (into/outof horizontal plane) of this vector to designate positive/negative curvature
 # return 1 or -1 to indicate direction
 def curvature_dir(p1, p2, p3):
-	A = np.array([p1[xidx], p1[zidx]])
-	B = np.array([p2[xidx], p2[zidx]])
-	C = np.array([p3[xidx], p3[zidx]])
+	A = np.array([p1[xidx], p1[yidx]])
+	B = np.array([p2[xidx], p2[yidx]])
+	C = np.array([p3[xidx], p3[yidx]])
 	nv = np.cross((B-A), (B-C))
 	if nv != 0:
 		return nv / abs(nv)
@@ -42,9 +42,9 @@ def curvature_dir(p1, p2, p3):
 # this should be fixed in future data during mocap configuration so that rigid body indexes are ordered in a reasonable way (ex: left to right on snake body)
 order = [2, 5, 1, 4, 6, 3]
 skip_frames = 5 # set this to control how many frames we sample for calculations/plots
-xidx, yidx, zidx = 0, 1, 2 # this mapping is also determined based on mocap calibration - check whether y or z is second axis in ground plane
+xidx, yidx = 0, 2 # (set plot yaxis to mocap zaxis) this mapping is determined based on mocap calibration - check whether y or z is second axis in ground plane
 xview = (-0.15, 0.15) # set this based on actual range of coordinates in mocap collection
-zview = (0, 0.3) # set this based on actual range of coordinates in mocap collection
+yview = (0, 0.3) # set this based on actual range of coordinates in mocap collection
 
 if __name__ == "__main__":
 	time = []
@@ -134,34 +134,34 @@ if __name__ == "__main__":
 	plt.title("Animated view of snake body")
 	plt.xlabel("Mocap xaxis (m)")
 	plt.ylabel("Mocap zaxis (m)")
-	plt.ylim(zview)
+	plt.ylim(yview)
 	plt.xlim(xview)
 	ax.set_aspect(1)
 	
 	# add initial points to lists for first plot - get x, z coordinate for every rigid body at frame 0
 	xlist = [bodies[j][0][xidx] for j in order]
-	zlist = [bodies[j][0][zidx] for j in order]
+	ylist = [bodies[j][0][yidx] for j in order]
 	
 	# initialize snake and curves to be updated
-	line, = ax.plot(xlist, zlist)
+	line, = ax.plot(xlist, ylist)
 	plt.setp(line, linewidth=3)
-	circ1 = plt.Circle((center1[0][xidx], center1[0][zidx]), radius=(abs(1/k1[0])), color='g', fill=False)
+	circ1 = plt.Circle((center1[0][xidx], center1[0][yidx]), radius=(abs(1/k1[0])), color='g', fill=False)
 	ax.add_patch(circ1)
-	circ2 = plt.Circle((center2[0][xidx], center2[0][zidx]), radius=(abs(1/k2[0])), color='r', fill=False)
+	circ2 = plt.Circle((center2[0][xidx], center2[0][yidx]), radius=(abs(1/k2[0])), color='r', fill=False)
 	ax.add_patch(circ2)
 	text = ax.text(-0.1, 0.02, '')
 	
 	# update all rigid body points, both circles, and curvature label text
 	def animate(i):
 		xlist = [bodies[j][i][xidx] for j in order]
-		zlist = [bodies[j][i][zidx] for j in order]
+		ylist = [bodies[j][i][yidx] for j in order]
 		line.set_xdata(xlist)
-		line.set_ydata(zlist)
+		line.set_ydata(ylist)
 
-		circ1.center = (center1[i][xidx], center1[i][zidx])
+		circ1.center = (center1[i][xidx], center1[i][yidx])
 		circ1.radius = abs(1 / (k1[i]))
 		
-		circ2.center = (center2[i][xidx], center2[i][zidx])
+		circ2.center = (center2[i][xidx], center2[i][yidx])
 		circ2.radius = abs(1 / (k2[i]))
 		
 		text.set_text('k1=' + str(k1[i]) + ', k2=' + str(k2[i]))
