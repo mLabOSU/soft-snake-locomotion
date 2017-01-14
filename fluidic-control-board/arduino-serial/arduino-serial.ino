@@ -56,10 +56,10 @@ void pPWM(float pwmfreq, float pwmDC1, float pwmDC2, float pwmDC3, float pwmDC4)
 
 void loop() {
   
-  while (Serial.available())
+  if (Serial.available())
   {
     byteIn = Serial.read();
-    Serial.println(byteIn);
+    Serial.print(byteIn);
     if (byteIn == 'y' || byteIn == 'Y') // y is yes, turn on valves with specified frequency
       on = true;
     else if (byteIn == 'v' || byteIn == 'V') // v is for valve - will be followed by index (1-4) and duty cycle percentage (1-100)
@@ -69,12 +69,12 @@ void loop() {
       {
         dCycles[vIndex] = Serial.parseInt();
       }
-      Serial.println(vIndex);
-      Serial.println(dCycles[vIndex]);
+      Serial.print(vIndex);
+      Serial.print(dCycles[vIndex]);
     }
     else
       on = false;
-     Serial.read(); // gobble newline char sent by matlab
+     //Serial.read(); // gobble newline char sent by matlab
   }
 
   potDC1 = 0; potDC2 = 0; potDC3 = 0; potDC4 = 0;
@@ -110,5 +110,5 @@ void loop() {
   //Serial.print(P3); Serial.print("\t");
   //Serial.print(P4); Serial.print("\n");
 
-  delay(200);
+  delay(100);
 }

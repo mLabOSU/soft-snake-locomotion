@@ -11,7 +11,7 @@ if __name__ == "__main__":
 	k_amplitude = 1
 	max_dutycycle = 20 / k_amplitude
 	
-	tlist = np.arange(0, 20, 0.1)
+	tlist = np.arange(0, 20, 0.2)
 	# curvatures vary circularly together
 	k1 = k_amplitude * np.cos(tlist)
 	k2 = k_amplitude * np.sin(tlist)
@@ -30,8 +30,9 @@ if __name__ == "__main__":
 	ax.set_aspect(1)
 	plt.show()
 	
-	ser = serial.Serial('COM4', 9600)
+	ser = serial.Serial('COM3', 9600)
 	print "Starting up control board..."
+	sleep(5)
 	ser.write(b'y')
 	
 	commands = [b'', b'', b'', b'']
@@ -54,17 +55,16 @@ if __name__ == "__main__":
 			commands[3] = b'v 3 '+ str(abs(pwm2))
 		
 		for c in commands:
+			sleep(0.1)
 			ser.write(c)
 			print c
-			sleep(0.01)
-		sleep(0.1)
 
 	# turn everything off and close handles
 	commands = [b'v 0 0', b'v 1 0', b'v 2 0', b'v 3 0']
 	for c in commands:
 		ser.write(c)
 		print c
-		sleep(0.01)
+		sleep(0.2)
 		
 	ser.write(b'n')
 	print b'n'
