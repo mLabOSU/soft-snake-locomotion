@@ -4,14 +4,13 @@ from time import sleep
 import matplotlib.pyplot as plt
 
 # TODO: determine actual mapping function from curvature -> pressure -> pwm dutycycle
-# TODO: check that these sleep times work
 
 if __name__ == "__main__":
 	# TODO: change these?
-	a = 2 # wide dimension of ellipse
-	b = 1 # narrow dimension of ellipse
-	max_dutycycle = 20 / max(a, b)
-	tilt_angle = np.pi / 4
+	a = 1 # wide dimension of ellipse
+	b = 0.75 # narrow dimension of ellipse
+	max_dutycycle = 20
+	tilt_angle = np.pi / 6
 	sin_tilt = np.sin(tilt_angle)
 	cos_tilt = np.cos(tilt_angle)
 	

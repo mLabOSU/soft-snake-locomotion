@@ -4,17 +4,15 @@ from time import sleep
 import matplotlib.pyplot as plt
 
 # TODO: determine actual mapping function from curvature -> pressure -> pwm dutycycle
-# TODO: check that these sleep times work
 
 if __name__ == "__main__":	
 	# TODO: change these?
-	k_amplitude = 1
-	max_dutycycle = 20 / k_amplitude
+	max_dutycycle = 20
 	
 	tlist = np.arange(0, 20, 0.2)
 	# curvatures vary circularly together
-	k1 = k_amplitude * np.cos(tlist)
-	k2 = k_amplitude * np.sin(tlist)
+	k1 = np.cos(tlist)
+	k2 = np.sin(tlist)
 	# note that the two lines below are temporary - we need an actual function to map curvature -> pwm rate
 	# each pwmpair will be used to inflate one chamber or the other on a single actuator 
 	# (negative value => chamber 1, positive value => chamber 2)
