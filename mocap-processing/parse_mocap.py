@@ -4,17 +4,17 @@ import matplotlib.animation as animation
 import numpy as np
 from collections import defaultdict
 
-# TODO: write out bodyref and curvature to a new csv
-
 # this "order" mapping is used to record the actual order of points along snake body moving in one direction
 # so rigid body 2 is left most, then 5, 1, ... 
 # this should be fixed in future data during mocap configuration so that rigid body indexes are ordered in a reasonable way (ex: left to right on snake body)
-order = [2, 5, 1, 4, 6, 3]
-skip_frames = 5 # set this to control how many frames we sample for calculations/plots
+order = [5, 2, 1, 4, 3, 6]
+skip_frames = 10 # set this to control how many frames we sample for calculations/plots
 xidx, yidx = 0, 2 # (set plot yaxis to mocap zaxis) this mapping is determined based on mocap calibration - check whether y or z is second axis in ground plane
-xview = (-0.15, 0.15) # set this based on actual range of coordinates in mocap collection
-yview = (0, 0.3) # set this based on actual range of coordinates in mocap collection
-dirname = 'optitrack_fakepts'
+xview = (-0.2, 0.2) # set this based on actual range of coordinates in mocap collection
+yview = (0, 0.4) # set this based on actual range of coordinates in mocap collection
+dirname = 'optitrack_circle_1_20_17'
+
+# TODO: write out bodyref and curvature to a new csv
 
 # borrowed this circle function from online:
 # http://stackoverflow.com/questions/20314306/find-arc-circle-equation-given-three-points-in-space-3d
@@ -63,11 +63,11 @@ if __name__ == "__main__":
 		for (i, row) in enumerate(reader):
 			if i % skip_frames == 0:
 				# subtract time/frame columns and then divide by three (x, y, z) to get total number of rigid bodies
-				num_bodies = (len(row) - 2) / 3 
+				num_bodies = (len(row) - 2) / 3
 				try:
 					time.append(float(row['Time']))
 					for i in range(1, num_bodies + 1):
-						key = 'Rigid Body ' + str(i)
+						key = 'Marker ' + str(i)
 						x = float(row[key + ' X'])
 						y = float(row[key + ' Y'])
 						z = float(row[key + ' Z'])
@@ -77,9 +77,8 @@ if __name__ == "__main__":
 					# (we need a third point to get circles)
 					# this will not be a part of future scripts when we collect data with three points per actuator	
 					x1, y1, z1 = bodies[order[0]][-1]
-					x2, y2, z2 = bodies[order[2]][-1]
-					x3, y3, z3 = x2+((x2-x1)*0.1), (y1+y2)/2, (z1+z2)/2
-					bodies[5].append((x3, y3, z3))
+					x2, y2, z2 = bodies[order[1]][-1]
+					x3, y3, z3 = bodies[order[2]][-1]
 					# compute shape variable in this frame
 					radius, center = find_circle((x1, y1, z1), (x2, y2, z2), (x3, y3, z3))
 					direction = curvature_dir((x1, y1, z1), (x2, y2, z2), (x3, y3, z3))
@@ -87,9 +86,8 @@ if __name__ == "__main__":
 					center1.append(center)
 					
 					x1, y1, z1 = bodies[order[3]][-1]
-					x2, y2, z2 = bodies[order[5]][-1]
-					x3, y3, z3 = x2+((x2-x1)*0.2), (y1+y2)/2, (z1+z2)/2
-					bodies[6].append((x3, y3, z3))
+					x2, y2, z2 = bodies[order[4]][-1]
+					x3, y3, z3 = bodies[order[5]][-1]
 					# compute shape variable in this frame
 					radius, center = find_circle((x1, y1, z1), (x2, y2, z2), (x3, y3, z3))
 					direction = curvature_dir((x1, y1, z1), (x2, y2, z2), (x3, y3, z3))
@@ -104,6 +102,8 @@ if __name__ == "__main__":
 					
 				except ValueError:
 					print "Unable to parse number from some row."
+					time.pop()
+					
 					continue
 	
 	# get bounds for plots
@@ -148,7 +148,7 @@ if __name__ == "__main__":
 	plt.ylabel("Mocap xaxis (m)")
 	plt.savefig(dirname + '/bodyz_vs_t.png')
 	plt.show()
-	
+
 	fig, ax = plt.subplots()
 	plt.title("Animated view of snake body")
 	plt.xlabel("Mocap xaxis (m)")
@@ -186,7 +186,7 @@ if __name__ == "__main__":
 		text.set_text('k1=' + str(k1[i]) + ', k2=' + str(k2[i]))
 		return line, circ1, circ2, text
 
-	ani = animation.FuncAnimation(fig, animate, frames=len(bodies[1]), interval=2, blit=False)
+	ani = animation.FuncAnimation(fig, animate, frames=len(bodies[1]), interval=1, blit=False)
 	
 	# uncomment this to save the animation to a video file
 	#Writer = animation.writers['ffmpeg']
