@@ -8,12 +8,12 @@ from parse_utilities import *
 # this "order" mapping is used to record the actual order of points along snake marker moving in one direction
 # so  marker 2 is left most, then 5, 1, ... 
 # this should be fixed in future data during mocap configuration so that  marker indexes are ordered in a reasonable way (ex: left to right on snake marker)
-order = [5, 2, 1, 4, 3, 6]
+order = [2, 4, 6, 5, 3, 1]
 skip_frames = 10 # set this to control how many frames we sample for calculations/plots
 xidx, yidx = 0, 2 # (set plot yaxis to mocap zaxis) this mapping is determined based on mocap calibration - check whether y or z is second axis in ground plane
 xview = (-0.2, 0.2) # set this based on actual range of coordinates in mocap collection
 yview = (0, 0.4) # set this based on actual range of coordinates in mocap collection
-dirname = 'optitrack_circle_1_20_17'
+dirname = 'optitrack_circle_1_30_17'
 
 if __name__ == "__main__":
 	time = []
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 	aabs = max(abs(amin), abs(amax)) # largest curvature magnitude
 	
 	plt.title("Shape over time ($\Theta_1$ and $\Theta_2$)")
-	plt.xlim((0, max(time)/2))
+	plt.xlim((0, max(time)))
 	plt.plot(time, angle1)
 	plt.plot(time, angle2)
 	plt.xlabel("Time (s)")
@@ -96,12 +96,15 @@ if __name__ == "__main__":
 	plt.show()
 
 	fig, ax = plt.subplots()
-	plt.title("Gait plot ($\Theta_1$ vs $\Theta_2$)")
-	plt.ylim((-1*aabs, aabs))
-	plt.xlim((-1*aabs, aabs))
+	plt.title("Gait Plot ($\Theta_1$ vs $\Theta_2$)")
+	plt.ylim((-1*np.pi, np.pi))
+	plt.xlim((-1*np.pi, np.pi))
 	plt.plot(angle1, angle2)
+	tlist = np.arange(0, 6*np.pi, 0.2)
+	plt.plot(np.pi/2*np.sin(tlist), np.pi/2*np.cos(tlist))
 	plt.xlabel("$\Theta_1$ (rad)")
 	plt.ylabel("$\Theta_2$ (rad)")
+	plt.legend(['Experimental (mocap)', 'Ideal gait'], loc='upper right')
 	ax.set_aspect(1)
 	plt.savefig(dirname + '/a1_vs_a2.png')
 	plt.show()
@@ -116,20 +119,13 @@ if __name__ == "__main__":
 	plt.savefig(dirname + '/l1_l2_vs_t.png')
 	plt.show()
 	
-	plt.title("Body frame coordinate (X) over time")
+	plt.title("Body frame position")
 	xpos = [x for (x, y, z) in bodyref]
-	plt.plot(time, xpos)
-	plt.xlabel("Time (s)")
-	plt.ylabel("Mocap xaxis (m)")
-	plt.savefig(dirname + '/bodyx_vs_t.png')
-	plt.show()
-	
-	plt.title("Body frame coordinate (Z) over time")
 	zpos = [z for (x, y, z) in bodyref]
-	plt.plot(time, zpos)
-	plt.xlabel("Time (s)")
+	plt.plot(xpos, zpos)
+	plt.xlabel("Mocap zaxis")
 	plt.ylabel("Mocap xaxis (m)")
-	plt.savefig(dirname + '/bodyz_vs_t.png')
+	plt.savefig(dirname + '/bodyx_vs_bodyz.png')
 	plt.show()
 
 	fig, ax = plt.subplots()
