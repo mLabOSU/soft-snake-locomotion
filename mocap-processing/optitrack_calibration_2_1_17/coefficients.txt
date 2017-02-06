@@ -1,0 +1,2 @@
+Coefficients for best-fit cubic functions:
+all actuators [  1.55194     -2.16049537  16.07873672   3.41597252]
