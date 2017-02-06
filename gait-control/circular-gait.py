@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 if __name__ == "__main__":	
 	# TODO: change these?
-	max_dutycycle = 20
+	max_dutycycle = 28
 	
 	tlist = np.arange(0, 20, 0.2)
 	# curvatures vary circularly together

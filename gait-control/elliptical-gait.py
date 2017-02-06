@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
 	# TODO: change these?
-	a = 1 # wide dimension of ellipse
-	b = 0.75 # narrow dimension of ellipse
-	max_dutycycle = 20
-	tilt_angle = np.pi / 6
+	a = np.pi / 2 # wide dimension of ellipse
+	b = 3*(np.pi / 8) # narrow dimension of ellipse
+	max_dutycycle = 28
+	tilt_angle = 3 * np.pi / 4
 	sin_tilt = np.sin(tilt_angle)
 	cos_tilt = np.cos(tilt_angle)
 	
