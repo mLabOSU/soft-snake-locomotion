@@ -29,31 +29,29 @@ if __name__ == "__main__":
 	sleep(5)
 	ser.write(b'y')
 	
-	commands = [b'', b'', b'', b'']
-	for pwm in pwmlist:
-		if pwm < 0:
-			commands[0] = b'v 0 ' + str(abs(pwm))
-			commands[1] = b'v 1 0'
-			commands[2] = b'v 2 ' + str(abs(pwm))
-			commands[3] = b'v 3 0'
+		command = b''
+	for (i, t) in enumerate(tlist):
+		# we'll have to see how effective integer rounding is on this limited pwm range
+		pwm1 = int(round(pwmpair1[i]))
+		pwm2 = int(round(pwmpair2[i]))
+		if pwm1 < 0:
+			command = b'v ' + str(abs(pwm1)) + b' 0 '
 		else:
-			commands[0] = b'v 0 0'
-			commands[1] = b'v 1 '+ str(abs(pwm))
-			commands[2] = b'v 2 0'
-			commands[3] = b'v 3 '+ str(abs(pwm))
+			command = b'v 0 ' + str(abs(pwm1)) + b' '
+			
+		if pwm2 < 0:
+			command += str(abs(pwm2)) + b' 0'
+		else:
+			command += b' 0 ' + str(abs(pwm2))
 		
-		for c in commands:
-			sleep(0.1)
-			ser.write(c)
-			print c
-		sleep(delta_t)
+		ser.write(command)
+		print command
+		sleep(0.5)
 
 	# turn everything off and close handles
-	commands = [b'v 0 0', b'v 1 0', b'v 2 0', b'v 3 0']
-	for c in commands:
-		ser.write(c)
-		print c
-		sleep(0.2)
+	command = b'v 0 0 0 0'
+	ser.write(command)
+	sleep(1)
 		
 	ser.write(b'n')
 	print b'n'

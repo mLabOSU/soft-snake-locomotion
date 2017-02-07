@@ -64,13 +64,11 @@ void loop() {
       on = true;
     else if (byteIn == 'v' || byteIn == 'V') // v is for valve - will be followed by index (1-4) and duty cycle percentage (1-100)
     {
-      vIndex = Serial.parseInt();
-      if (vIndex >= 0 && vIndex < 4)
+      for (int vIndex = 0; vIndex < 4; vIndex++)
       {
         dCycles[vIndex] = Serial.parseInt();
+        Serial.println(dCycles[vIndex]);
       }
-      Serial.print(vIndex);
-      Serial.print(dCycles[vIndex]);
     }
     else
       on = false;
