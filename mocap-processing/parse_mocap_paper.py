@@ -9,14 +9,15 @@ from parse_utilities import *
 # this "order" mapping is used to record the actual order of points along snake marker moving in one direction
 # so  marker 2 is left most, then 5, 1, ... 
 # this should be fixed in future data during mocap configuration so that  marker indexes are ordered in a reasonable way (ex: left to right on snake marker)
-order = [6, 1, 2, 4, 5, 3]
+order = [4, 5, 3, 2, 1, 6]
 skip_frames = 10 # set this to control how many frames we sample for calculations/plots
 xidx, yidx = 0, 2 # (set plot yaxis to mocap zaxis) this mapping is determined based on mocap calibration - check whether y or z is second axis in ground plane
 xview = (-0.2, 0.2) # set this based on actual range of coordinates in mocap collection
 yview = (0, 0.4) # set this based on actual range of coordinates in mocap collection
-dirname = '5_api2_bpi8_dc28_tilt_pi4_2017-02-08'
+dirname = '1_api2_bpi2_dc28_tilt_pi4_2017-02-08'
 
-font = {'size'   : 18}
+font = {'family' : 'normal',
+        'size'   : 18}
 
 rc('font', **font)
 
@@ -100,11 +101,13 @@ if __name__ == "__main__":
 	plt.savefig(dirname + '/a1_a2_vs_t.png')
 	plt.show()
 
+	img = plt.imread("x-nostroke-182-10x10.png")
 	fig, ax = plt.subplots()
+	ax.imshow(img, aspect="auto", extent=[-5, 5, -5, 5])
 	plt.title(r"Gait Plot ($\alpha_1$ vs $\alpha_2$)")
 	plt.ylim((-5, 5))
 	plt.xlim((-5, 5))
-	plt.plot(angle1, angle2)
+	plt.plot(angle1[50:len(angle1)-50], angle2[50:len(angle1)-50])
 	plt.xlabel(r"$\alpha_1$ (rad)")
 	plt.ylabel(r"$\alpha_2$ (rad)")
 	ax.set_aspect(1)

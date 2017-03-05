@@ -1,4 +1,5 @@
 import csv
+from matplotlib import rc
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
@@ -13,7 +14,15 @@ dirname = 'optitrack_pressure_2_3_17'
 pmin = 0
 pmax = 350
 pdelta = 50
-prefixes = ['b', 'g', 'r', 'nt']
+prefixes = ['g', 'r', 'b', 'nt']
+colors = ['g', 'r', 'k', 'y']
+labels = ['Actuator 1 +', 'Actuator 1 -', 'Actuator 2 +', 'Actuator 2 -']
+
+kpa_per_psi = 6.89476
+
+font = {'size'   : 18}
+
+rc('font', **font)
 
 if __name__ == "__main__":
 	time = []
@@ -68,62 +77,36 @@ if __name__ == "__main__":
 							time.pop()
 							continue
 				
-			pressure[s].append(float(p) / 100.0)
+			pressure[s].append(kpa_per_psi * float(p) / 100.0)
 			curvature[s].append(abs(sum(ktemp)) / len(ktemp))
 			angle[s].append(abs(sum(atemp)) / len(atemp))
 			length[s].append(abs(sum(ltemp)) / len(ltemp))
 	
-	plt.title(r"Pressure-Angle Curve (Alpha)")
-	for s in prefixes:
-		plt.plot(pressure[s], angle[s], marker='o')
-	plt.xlabel("Pressure (psi)")
+	plt.title(r"Pressure-Angle Curve ($\alpha$)")
+	for (i, s) in enumerate(prefixes):
+		plt.plot(pressure[s], angle[s], marker='o', color=colors[i])
+	plt.xlabel("Pressure (kPa)")
 	plt.ylabel("Angle (rad)")
-	plt.legend(prefixes, loc='upper left')
+	plt.legend(labels, loc='upper left')
 	plt.savefig(dirname + '/a_vs_p.png')
 	plt.show()
 	
-	plt.title(r"Pressure-Curvature Curve (Kappa)")
-	for s in prefixes:
-		plt.plot(pressure[s], curvature[s], marker='o')
-	plt.xlabel("Pressure (psi)")
+	plt.title(r"Pressure-Curvature Curve ($\kappa$)")
+	for (i, s) in enumerate(prefixes):
+		plt.plot(pressure[s], curvature[s], marker='o', color=colors[i])
+	plt.xlabel("Pressure (kPa)")
 	plt.ylabel("Curvature (1/m)")
-	plt.legend(prefixes, loc='upper left')
+	plt.legend(labels, loc='upper left')
 	plt.savefig(dirname + '/k_vs_p.png')
 	plt.show()
 	
 	plt.title("Pressure-Length Curve (L)")
-	for s in prefixes:
-		plt.plot(pressure[s], length[s], marker='o')
-	plt.xlabel("Pressure (psi)")
+	for (i, s) in enumerate(prefixes):
+		plt.plot(pressure[s], length[s], marker='o', color=colors[i])
+	plt.xlabel("Pressure (kPa)")
 	plt.ylabel("Actuator Length (m)")
-	plt.legend(prefixes, loc='upper left')
+	plt.legend(labels, loc='upper left')
 	plt.savefig(dirname + '/l_vs_p.png')
 	plt.show()
 
-	fig, ax = plt.subplots()
-	plt.title("Animated view of snake body")
-	plt.xlabel("Mocap xaxis (m)")
-	plt.ylabel("Mocap zaxis (m)")
-	plt.ylim(yview)
-	plt.xlim(xview)
-	ax.set_aspect(1)
-	
-	# add initial points to lists for first plot - get x, z coordinate for every marker at frame 0
-	xlist = [markers[j][0][xidx] for j in [1, 2, 3]]
-	ylist = [markers[j][0][yidx] for j in [1, 2, 3]]
-	
-	# initialize snake and curves to be updated
-	line, = ax.plot(xlist, ylist)
-	plt.setp(line, linewidth=3)
-	
-	# update all marker points, both circles, and curvature label text
-	def animate(i):
-		xlist = [markers[j][i][xidx] for j in [1, 2, 3]]
-		ylist = [markers[j][i][yidx] for j in [1, 2, 3]]
-		line.set_xdata(xlist)
-		line.set_ydata(ylist)
-		return line
-
-	ani = animation.FuncAnimation(fig, animate, frames=len(markers[1]), interval=1, blit=False)
-	plt.show()
 	
