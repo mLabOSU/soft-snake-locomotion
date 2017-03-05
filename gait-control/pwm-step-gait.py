@@ -29,7 +29,7 @@ if __name__ == "__main__":
 	sleep(5)
 	ser.write(b'y')
 	
-		command = b''
+	command = b''
 	for (i, t) in enumerate(tlist):
 		# we'll have to see how effective integer rounding is on this limited pwm range
 		pwm1 = int(round(pwmpair1[i]))

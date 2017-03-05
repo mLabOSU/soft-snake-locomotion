@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
 	# TODO: change these?
 	a = np.pi / 2 # wide dimension of ellipse
-	b = 3*(np.pi / 8) # narrow dimension of ellipse
-	max_dutycycle = 24
+	b = (np.pi / 2) # narrow dimension of ellipse
+	max_dutycycle = 28
 	tilt_angle = np.pi / 4
 	sin_tilt = np.sin(tilt_angle)
 	cos_tilt = np.cos(tilt_angle)
@@ -27,7 +27,7 @@ if __name__ == "__main__":
 	# show gait shape cycle that we are about to send
 	fig, ax = plt.subplots()
 	plt.title("Gait plot (k1 vs k2)")
-	plt.plot(k1, k2)
+	plt.plot(np.round(pwmpair1), np.round(pwmpair2))
 	plt.xlabel("k1 (m)")
 	plt.ylabel("k2 (m)")
 	ax.set_aspect(1)
