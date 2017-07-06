@@ -24,6 +24,14 @@ k2 = np.sin(tlist)
 pwmpair1 = max_dutycycle * k1
 pwmpair2 = max_dutycycle * k2
 
+fig, ax = plt.subplots()
+plt.title("Gait plot (k1 vs k2)")
+plt.plot(k1, k2)
+plt.xlabel("k1 (m)")
+plt.ylabel("k2 (m)")
+ax.set_aspect(1)
+plt.show()
+
 for (i, t) in enumerate(tlist):  
     board.setPWMList([pwmpair1[i], pwmpair2[i]])
 board.close()
