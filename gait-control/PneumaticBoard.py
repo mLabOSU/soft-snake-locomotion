@@ -2,7 +2,7 @@
 """
 Created on Thu Jun 29 10:44:14 2017
 
-@author: jrs
+@author: Lily Orth-Smith
 #python 3
 """
 
@@ -38,14 +38,17 @@ class PneumaticBoard:
 		
     def updatePWM(self):
         command = b'v '
+        count = 0
         for pwm in self.pwmList:
+            count+=1
             if pwm <= 0:                            #if pwm < 0, then send to left side (even indices), 
                 pwm = abs(int(round(pwm)))          #if pwm > 0, then send to right side (odd indices)
                 command = command + str(abs(pwm)).encode('ascii') + b' 0'#sends pwm to left, 0 to right 
             else: 
                 pwm = abs(int(round(pwm)))
-                command = command + b' 0 ' + str(abs(pwm)).encode('ascii') #send 0 to right, pwm to left
-		
+                command = command + b'0 ' + str(abs(pwm)).encode('ascii') #send 0 to right, pwm to left
+            if count < len(self.pwmList):
+                command = command + b' '
         self.ser.write(command)#.encode('utf-8'))
         print(command)
         sleep(0.5)
