@@ -1,36 +1,43 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jul 11 11:01:18 2017
+Created on Tue Jul 11 11:14:11 2017
 
 @author: jrs
 """
+
+# -*- coding: utf-8 -*-
 """
-important note: each actuator should be plugged in the same way, i.e., left side, right side, left side, right side (no alternating)
+Created on Thu Jun 29 11:20:09 2017
+
+@author: jrs
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 from PneumaticBoard import *
 
-board = PneumaticBoard()
+board = PneumaticBoard(actuators=4, port='COM4')
 
-max_dutycycle = 25 #24 for extensible
-vertical_dilation = 1
-phase_shift = 0
-front_dilation = 1
-back_dilation = 1
+max_dutycycle = 12 #24 for extensible
 
 #tlist = np.arange(0, 10, 0.2)
-tlist = np.arange(0, 180, 0.5) #changed to 0.5 (from 0.2) to match sleep value in pneumatic board.
-                              #if values NOT the same, get dilation of functions that does not show up in graphs. 
+tlist = np.arange(0, 40, 0.5)
 	# curvatures vary circularly together
-k1 = front_dilation * vertical_dilation * np.cos(tlist)
-k2 = back_dilation * vertical_dilation * np.sin(tlist + phase_shift)
-
+k1 = np.cos(tlist)
+k2 = np.cos(tlist + np.pi/2)
+k3 = np.cos(tlist + np.pi)
+k4 = np.cos(tlist + 3*np.pi/4)
+#k3 = 0 * tlist
+#k4 = 0* tlist
+k3 = np.cos(tlist)
+k4 = np.sin(tlist)
 	# note that the two lines below are temporary - we need an actual function to map curvature -> pwm rate
 	# each pwmpair will be used to inflate one chamber or the other on a single actuator 
 	# (negative value => chamber 1, positive value => chamber 2)
 pwmpair1 = max_dutycycle * k1
 pwmpair2 = max_dutycycle * k2
+pwmpair3 = max_dutycycle * k3
+pwmpair4 = max_dutycycle * k4
 
 fig, ax = plt.subplots()
 plt.title("Gait plot (k1 vs k2)")
@@ -42,6 +49,6 @@ plt.show()
 
 board.on()
 for (i, t) in enumerate(tlist):
-    board.setPWMList([pwmpair1[i], pwmpair2[i]])
+    board.setPWMList([pwmpair1[i], pwmpair2[i], pwmpair3[i], pwmpair4[i]])
 board.off()
 board.close()
