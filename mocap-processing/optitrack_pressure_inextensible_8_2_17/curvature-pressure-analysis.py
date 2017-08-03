@@ -14,7 +14,10 @@ dirname = 'Users\jrs\Documents\OSUREU\Mocap Data Analysis\08-01-17 data'
 pmin = 1.0
 pmax = 3.0
 pdelta = 0.5
-prefixes = ['E1L', 'E1R', 'E2L', 'E2R', 'I1L', 'I1R', 'I2L', 'I2R']
+prefixes = ['E1L', 'E1R', 'E2L', 'E2R', 'I1Lnew', 'I1Rnew', 'I2Lnew', 'I2Rnew']
+#prefixes = ['I1L', 'I1R', 'I1Lnew', 'I1Rnew']
+#prefixes = ['I2L', 'I2R', 'I2Lnew', 'I2Rnew']
+
 #colors = ['g', 'r', 'k', 'y']
 labels = ['Actuator 1 +', 'Actuator 1 -', 'Actuator 2 +', 'Actuator 2 -']
 
@@ -23,6 +26,19 @@ kpa_per_psi = 6.89476
 font = {'size': 18}
 
 rc('font', **font)
+
+
+def getColor(prefix):
+    color = ''
+    if prefix == 'E1L' or prefixes[i] == 'E1R':
+        color = 'r'
+    elif prefix == 'E2L' or prefixes[i] == 'E2R':
+        color = 'm'
+    elif prefix == 'I1Lnew' or prefixes[i] == 'I1Rnew':
+        color = 'c'
+    elif prefix == 'I2Lnew' or prefixes[i] == 'I2Rnew':
+        color = 'b'
+    return color
 
 if __name__ == "__main__":
     time = []
@@ -96,7 +112,13 @@ if __name__ == "__main__":
 
     plt.title(r"Pressure-Angle Curve ($\alpha$)")
     for (i, s) in enumerate(prefixes):
-        plt.plot(pressure[s], angle[s], marker='o')
+        linestyle = ''
+        if i % 2 == 0:
+            linestyle = '--'
+        else:
+            linestyle = '-'
+        color = getColor(prefixes[i])
+        plt.plot(pressure[s], angle[s], marker='o', color=color, linestyle=linestyle)
     plt.xlabel("Pressure (kPa)")
     plt.ylabel("Angle (rad)")
     plt.legend(prefixes, loc='upper left')
@@ -105,7 +127,13 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     plt.title(r"Pressure-Curvature Curve ($\kappa$)")
     for (i, s) in enumerate(prefixes):
-        plt.plot(pressure[s], curvature[s], marker='o')
+        linestyle = ''
+        if i % 2 == 0:
+            linestyle = '--'
+        else:
+            linestyle = '-'
+        color = getColor(prefixes[i])
+        plt.plot(pressure[s], curvature[s], marker='o', color=color, linestyle=linestyle)
     plt.xlabel("Pressure (kPa)")
     plt.ylabel("Curvature (1/m)")
     plt.legend(prefixes, loc='upper left')
@@ -114,7 +142,13 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     plt.title("Pressure-Length Curve (L)")
     for (i, s) in enumerate(prefixes):
-        plt.plot(pressure[s], length[s], marker='o')
+        linestyle = ''
+        if i % 2 == 0:
+            linestyle = '--'
+        else:
+            linestyle = '-'
+        color = getColor(prefixes[i])
+        plt.plot(pressure[s], length[s], marker='o', color=color, linestyle=linestyle)
     plt.xlabel("Pressure (kPa)")
     plt.ylabel("Actuator Length (m)")
     plt.legend(prefixes, loc='upper left')
