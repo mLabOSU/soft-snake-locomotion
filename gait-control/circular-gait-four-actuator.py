@@ -14,9 +14,9 @@ Created on Thu Jun 29 11:20:09 2017
 
 import numpy as np
 import matplotlib.pyplot as plt
-from PneumaticBoard import *
+from PneumaticBoardSnake import *
 
-board = PneumaticBoard(actuators=4, port='COM4')
+board = PneumaticBoardSnake(actuators=4, port='COM4')
 
 max_dutycycle = 12 #24 for extensible
 

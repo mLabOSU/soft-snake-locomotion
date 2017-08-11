@@ -35,20 +35,13 @@ class PneumaticBoard:
     def setPWM(self, pwm, index):
         self.pwmList[index] = pwm
         self.updatePWM()
-		
+
     def updatePWM(self):
         command = b'v '
         count = 0
         for pwm in self.pwmList:
-            count+=1
-            if pwm <= 0:                            #if pwm < 0, then send to left side (even indices), 
-                pwm = abs(int(round(pwm)))          #if pwm > 0, then send to right side (odd indices)
-                command = command + str(abs(pwm)).encode('ascii') + b' 0'#sends pwm to left, 0 to right 
-            else: 
-                pwm = abs(int(round(pwm)))
-                command = command + b'0 ' + str(abs(pwm)).encode('ascii') #send 0 to right, pwm to left
-            if count < len(self.pwmList):
-                command = command + b' '
+            pwm = abs(int(round(pwm)))
+            command = command + str(abs(pwm)).encode('ascii')
         self.ser.write(command)#.encode('utf-8'))
         print(command)
         sleep(0.5)
@@ -58,14 +51,4 @@ class PneumaticBoard:
             print (pwm)
             
             
-"""
-		if pwm1 < 0:
-			command = b'v ' + str(abs(pwm1)).encode('ascii') + b' 0 '
-		else:
-			command = b'v 0 ' + str(abs(pwm1)).encode('ascii') + b' '
-      if pwm2 < 0:
-			command += str(abs(pwm2)).encode('ascii') + b' 0'
-		else:
-			command += b' 0 ' + str(abs(pwm2)).encode('ascii')
-"""
 
