@@ -14,23 +14,38 @@ Created on Thu Jun 29 11:20:09 2017
 
 import numpy as np
 import matplotlib.pyplot as plt
-from PneumaticBoard import *
+from PneumaticBoardSnake import *
 
-board = PneumaticBoard(actuators=4, port='COM4')
+board = PneumaticBoardSnake(actuators=4, port='COM4')
 
 max_dutycycle = 12 #24 for extensible
 
 #tlist = np.arange(0, 10, 0.2)
-tlist = np.arange(0, 40, 0.5)
+tlist = np.arange(0, 180, 0.5)
 	# curvatures vary circularly together
-k1 = np.cos(tlist)
+"""
+k1 = [25, 25]
+k2 = [0, 0]
+k3 = [0, 0]
+k4 = [0, 0]
+"""
+
+k1 =  np.cos(tlist)
+k2 = np.cos(tlist)
+k3 = np.cos(tlist + np.pi/2)
+k4 =  np.cos(tlist+ np.pi/2)
+
+
+"""
 k2 = np.cos(tlist + np.pi/2)
 k3 = np.cos(tlist + np.pi)
-k4 = np.cos(tlist + 3*np.pi/4)
+k4 = np.cos(tlist + 3*np.pi/2)
+"""
+
 #k3 = 0 * tlist
 #k4 = 0* tlist
-k3 = np.cos(tlist)
-k4 = np.sin(tlist)
+#k3 = np.cos(tlist)
+#k4 = np.sin(tlist)
 	# note that the two lines below are temporary - we need an actual function to map curvature -> pwm rate
 	# each pwmpair will be used to inflate one chamber or the other on a single actuator 
 	# (negative value => chamber 1, positive value => chamber 2)
