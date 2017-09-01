@@ -10,7 +10,7 @@ import serial # python -m pip install pyserial
 from time import sleep
 
 class PneumaticBoard:
-    def __init__(self, actuators=2, port='COM3', baud=9600):
+    def __init__(self, actuators=4, port='COM3', baud=9600):
         self.pwmList = [0] * actuators
         self.ser = serial.Serial(port, baud)
         print ("Please wait for control board connection...")
