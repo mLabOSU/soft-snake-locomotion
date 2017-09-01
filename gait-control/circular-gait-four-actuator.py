@@ -23,29 +23,12 @@ max_dutycycle = 12 #24 for extensible
 #tlist = np.arange(0, 10, 0.2)
 tlist = np.arange(0, 180, 0.5)
 	# curvatures vary circularly together
-"""
-k1 = [25, 25]
-k2 = [0, 0]
-k3 = [0, 0]
-k4 = [0, 0]
-"""
 
 k1 =  np.cos(tlist)
-k2 = np.cos(tlist)
-k3 = np.cos(tlist + np.pi/2)
-k4 =  np.cos(tlist+ np.pi/2)
+k2 = k1
+k3 = -np.sin(tlist)
+k4 =  k3
 
-
-"""
-k2 = np.cos(tlist + np.pi/2)
-k3 = np.cos(tlist + np.pi)
-k4 = np.cos(tlist + 3*np.pi/2)
-"""
-
-#k3 = 0 * tlist
-#k4 = 0* tlist
-#k3 = np.cos(tlist)
-#k4 = np.sin(tlist)
 	# note that the two lines below are temporary - we need an actual function to map curvature -> pwm rate
 	# each pwmpair will be used to inflate one chamber or the other on a single actuator 
 	# (negative value => chamber 1, positive value => chamber 2)
